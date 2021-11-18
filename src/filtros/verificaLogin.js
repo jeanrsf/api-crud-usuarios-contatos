@@ -1,37 +1,33 @@
 const conexao = require('../conexao');
 const jwt = require('jsonwebtoken');
-const { json } = require('express');
-const jwtSecrets = 'Meu futuro'
+const jwtSecrets = 'Meu futuro';
+const knex = require('../conexao');
 
 const verificaLogin = async(req, res, next) => {
-
-    const { authorization } = req.headers
+    const { authorization } = req.headers;
 
     if (!authorization) {
-        return res.status(401).json({ mensagem: "Usuario não esta autenticado" })
+        return res.status(401).json({ mensagem: 'Usuario não esta autenticado' });
     }
 
     try {
         const token = authorization.replace('Bearer', '').trim();
-        console.log(token);
         const { id } = jwt.verify(token, jwtSecrets);
 
-        const query = 'SELECT * FROM usuarios WHERE id =$1'
-        const { rows, rowCount } = await conexao.query(query, [id])
+        const verificaEmail = await knex('usuarios').where('id', id).first();
 
-        if (rowCount === 0) {
-            return res.status(404).json({ mensagem: 'Usuario nao encontrado' })
+        if (!verificaEmail) {
+            return res.status(404).json({ mensagem: 'Usuario nao encontrado' });
         }
 
-        const { senha, ...usuario } = rows[0];
+        const { senha, ...usuario } = verificaEmail;
 
         req.usuario = usuario;
 
         next();
-
     } catch (error) {
-        return res.status(400).json(error.message)
+        return res.status(400).json(error.message);
     }
-}
+};
 
-module.exports = verificaLogin
+module.exports = verificaLogin;

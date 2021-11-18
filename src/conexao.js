@@ -1,17 +1,11 @@
-const { Pool } = require('pg');
-
-const pool = new Pool({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'market_cubos',
-    password: '123456',
-    port: 5432
+const knex = require('knex')({
+    client: 'pg',
+    connection: {
+        host: process.env.db_host,
+        user: process.env.db_user,
+        port: process.env.db_port,
+        password: process.env.db_password,
+        database: process.env.db_dataBase,
+    },
 });
-
-const query = (text, param) => {
-    return pool.query(text, param);
-}
-
-module.exports = {
-    query
-}
+module.exports = knex;

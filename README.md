@@ -12,7 +12,7 @@ Esse projeto irá simular uma RESTful API que irá fornecer as seguintes funcion
 -   Editar produtos
 -   Remover produtos
 
-## **Requisitos para execultar o projeto**
+## **Requisitos para executar o projeto**
 
 1. Instalar versão do node `v12.22.6` ou superior
 2. Possuir o banco de dados PostgreSQL local
